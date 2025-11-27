@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🌟 Safari de Sonidos y Nombres 🚀</title>
+    <style>
+        /* -------------------------------------------------------------------------- */
+        /* ESTILOS BASE                               */
+        /* -------------------------------------------------------------------------- */
+
+        @import url('https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Nunito:wght@400;700;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            /* Usamos la fuente Nunito por ser amigable y clara */
+            font-family: 'Nunito', sans-serif;
+        }
+        
+        body {
+            /* Fondo más vibrante y animado */
+            background: linear-gradient(135deg, #FF6F61 0%, #FFD166 100%);
+            min-height: 100vh;
+            display: flex;
+            overflow: hidden;
+        }
+
+        /* Título principal con fuente impactante */
+        h1, h2, #modal-titulo {
+            font-family: 'Luckiest Guy', cursive;
+            text-shadow: 2px 4px 0px rgba(0,0,0,0.1);
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* PANTALLA DE INICIO                           */
+        /* -------------------------------------------------------------------------- */
+
+        #pantalla-inicio {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #4A4E69 0%, #9A8C98 100%);
+            display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000;
+        }
+        .inicio-contenedor {
+            background: #FFFFFF; padding: 40px; border-radius: 40px; box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            text-align: center; max-width: 550px; width: 90%; 
+            animation: bounceIn 0.8s, flotarInicio 3s ease-in-out infinite 0.8s;
+            border: 8px solid #FFD166; /* Borde de color */
+        }
+        @keyframes bounceIn { from { transform: scale(0.5); opacity: 0; } 60% { transform: scale(1.1); opacity: 1; } to { transform: scale(1); } }
+        @keyframes flotarInicio { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-15px); } }
+
+        .inicio-contenedor h1 { 
+            color: #FF6F61; 
+            font-size: 4em; 
+            margin-bottom: 5px; 
+            letter-spacing: 2px;
+            text-shadow: 4px 4px 0px #4A4E69;
+        }
+        .inicio-contenedor p {
+            color: #4A4E69;
+            font-weight: 700;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .inicio-contenedor input { 
+            width: 100%; padding: 18px; font-size: 1.4em; border: 4px solid #4A4E69;
+            border-radius: 15px; margin: 25px 0; text-align: center; 
+            font-family: 'Nunito', sans-serif; outline: none; color: #4A4E69; 
+            transition: all 0.3s;
+        }
+        .inicio-contenedor input:focus {
+            border-color: #FF6F61;
+            box-shadow: 0 0 10px rgba(255, 111, 97, 0.5);
+        }
+
+        .btn-comenzar { 
+            width: 100%; padding: 18px; font-size: 1.8em; 
+            background: linear-gradient(90deg, #577590, #90AFC5);
+            color: white; border: none; border-radius: 50px; cursor: pointer; 
+            box-shadow: 0 8px 0 #4A4E69; 
+            transition: all 0.1s; 
+            font-family: 'Luckiest Guy', cursive;
+            margin-top: 10px;
+        }
+        .btn-comenzar:active { 
+            transform: translateY(4px); 
+            box-shadow: 0 4px 0 #4A4E69; 
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* LAYOUT                                   */
+        /* -------------------------------------------------------------------------- */
+
+        .contenedor-principal { display: flex; width: 100%; height: 100vh; }
+
+        /* --- SIDEBAR (Menú de Categorías) --- */
+        #sidebar { 
+            width: 280px; background: #FFFFFF; padding: 25px 20px; 
+            display: flex; flex-direction: column; gap: 12px; 
+            box-shadow: 8px 0 20px rgba(0,0,0,0.15); z-index: 100;
+            overflow-y: auto; 
+        }
+        .perfil { background: #FFD166; padding: 15px; border-radius: 18px; text-align: center; margin-bottom: 15px; border: 3px dashed #4A4E69; }
+        .perfil h3 { color: #4A4E69; font-size: 1em; margin-bottom: 3px; }
+        .perfil h2 { color: #FF6F61; font-family: 'Luckiest Guy', cursive; font-size: 1.8em; }
+
+        .categoria-btn { 
+            padding: 12px 15px; 
+            border-radius: 15px; cursor: pointer; transition: all 0.3s; 
+            background: #F0F4F7;
+            border: 3px solid #E0E4E7; 
+            opacity: 0.6; pointer-events: none; 
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .categoria-btn.desbloqueada { opacity: 1; pointer-events: all; border-color: #FFD166; }
+        .categoria-btn.desbloqueada:hover { 
+            background: #FFF9E9; 
+            transform: scale(1.02); 
+            box-shadow: 0 4px 10px rgba(255, 209, 102, 0.4);
+        }
+        .categoria-btn.activa { 
+            background: linear-gradient(90deg, #FF6F61, #FF9A8C); 
+            color: white; border-color: #FF6F61; 
+            transform: translateX(8px); 
+            box-shadow: 0 6px 15px rgba(255, 111, 97, 0.5); 
+        }
+        .estrellas { font-size: 18px; margin-top: 0px; }
+        .estrella { color: #E0E4E7; text-shadow: none; }
+        .estrella.ganada { color: #FFD166; text-shadow: 1px 1px 0 #4A4E69; }
+
+        /* -------------------------------------------------------------------------- */
+        /* ÁREA DE JUEGO / STATS                          */
+        /* -------------------------------------------------------------------------- */
+        #area-juego { 
+            flex: 1; display: flex; flex-direction: column; padding: 30px; overflow-y: auto;
+            background-color: #F8F8F8;
+            background-image: radial-gradient(#9A8C98 1px, transparent 1px); background-size: 30px 30px;
+        }
+        .titulo-stats { 
+            text-align: center; color: white; font-size: 2.2em; font-weight: 700; 
+            text-shadow: 3px 3px 0px #4A4E69; 
+            padding: 10px 0;
+        }
+
+        #barra-progreso-stats {
+            background: linear-gradient(90deg, #9A8C98, #C3BABA); 
+            padding: 25px; border-radius: 35px; 
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 25px; position: relative;
+        }
+        .stats-cajas { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
+        .stat-box { 
+            background: #FFFFFF; padding: 10px 20px; border-radius: 20px; text-align: center; 
+            width: 140px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); 
+            border: 2px solid #577590;
+        }
+        .stat-label { font-size: 0.9em; font-weight: 700; margin-bottom: 5px; color: #577590; }
+        .stat-valor { font-size: 1.8em; font-weight: 900; color: #FF6F61; }
+
+        .progreso-bar-contenedor { width: 100%; height: 35px; background-color: rgba(0, 0, 0, 0.2); border-radius: 50px; overflow: hidden; }
+        #progreso-bar { 
+            height: 100%; width: 0%; 
+            background: linear-gradient(90deg, #FFD166, #FF6F61); 
+            transition: width 0.6s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            display: flex; align-items: center; justify-content: flex-end; padding-right: 15px; 
+            color: #4A4E69; font-weight: 900; font-size: 1.2em; text-shadow: 1px 1px 0 white;
+        }
+        .puntos-totales-lateral {
+            position: absolute; top: -15px; right: 20px; 
+            background: #4A4E69; 
+            padding: 10px 20px; border-radius: 25px; text-align: center; 
+            color: #FFD166; font-weight: 700; 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            border: 3px solid white;
+        }
+        .puntos-totales-lateral span { font-size: 3em; display: block; line-height: 1; }
+        #instruccion { 
+            display: block; text-align: center; margin-bottom: 15px; 
+            font-size: 1.2em; font-weight: 700; color: #4A4E69;
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* TARJETAS Y OPCIONES                           */
+        /* -------------------------------------------------------------------------- */
+
+        #tablero { display: flex; flex-wrap: wrap; justify-content: center; gap: 30px; margin-bottom: 180px; }
+        .tarjeta { 
+            background: #FFFFFF; padding: 25px; border-radius: 30px; width: 220px; 
+            display: flex; flex-direction: column; align-items: center; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            transition: transform 0.3s; 
+            border: 4px solid #FF6F61; /* Borde de contraste */
+            animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+        }
+        
+        .emoji-grande { 
+            font-size: 80px; margin-bottom: 10px; 
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
+            cursor: pointer; 
+            transition: transform 0.2s; 
+        }
+        .emoji-grande:hover { transform: scale(1.2) rotate(5deg); }
+
+        .zona-drop { 
+            width: 100%; height: 55px; border: 3px dashed #90AFC5; 
+            border-radius: 15px; margin-top: 10px;
+            display: flex; align-items: center; justify-content: center; 
+            color: #577590; font-size: 1.1em; font-weight: 700;
+            transition: all 0.3s; background: #EAF2F8; 
+            text-transform: uppercase;
+        }
+        .zona-drop.hover { 
+            border-color: #FF6F61; 
+            background: #FFF9E9; 
+            transform: scale(1.05); 
+            box-shadow: 0 0 10px rgba(255, 111, 97, 0.5);
+        }
+        .zona-drop.acierto {
+            animation: aciertoAnim 0.3s;
+            color: white !important;
+            font-weight: 900;
+        }
+        .zona-drop.error {
+            animation: shake 0.3s;
+        }
+        @keyframes aciertoAnim { 0% { transform: scale(1); } 50% { transform: scale(1.1); } 100% { transform: scale(1); } }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-5px); } 40%, 80% { transform: translateX(5px); } }
+
+        .tarjeta.completada { animation: irseVolando 0.8s forwards ease-in; }
+        @keyframes irseVolando { 0% { transform: scale(1); } 20% { transform: scale(0.9); } 100% { transform: translate(100px, -300px) rotate(30deg); opacity: 0; } }
+
+
+        /* --- PANEL OPCIONES (FICHAS) --- */
+        #panel-opciones {
+            position: fixed; bottom: 0; left: 280px; right: 0; background: #4A4E69; 
+            padding: 20px 20px 40px 20px; /* Más padding inferior */
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.3); 
+            display: flex; justify-content: center;
+            flex-wrap: wrap; gap: 15px; z-index: 50; min-height: 120px;
+        }
+        .ficha { 
+            background: linear-gradient(135deg, #FFD166, #FF6F61); 
+            color: #4A4E69; 
+            padding: 12px 25px;
+            border-radius: 30px; 
+            font-size: 1.2em; 
+            cursor: grab; 
+            box-shadow: 0 5px 0 #4A4E69;
+            transition: all 0.1s; 
+            display: flex; align-items: center; gap: 8px; 
+            font-weight: 900;
+            text-transform: uppercase;
+        }
+        .ficha:hover { transform: translateY(-3px) scale(1.03); box-shadow: 0 8px 0 #4A4E69; }
+        .ficha:active { transform: translateY(0); box-shadow: 0 5px 0 #4A4E69; }
+        .ficha.usada { transform: scale(0); opacity: 0; width: 0; margin: 0; padding: 0; transition: all 0.4s; }
+        .btn-play-mini { 
+            background: rgba(0,0,0,0.1); 
+            color: white;
+            border-radius: 50%; width: 30px; height: 30px;
+            display: flex; align-items: center; justify-content: center; font-size: 1em; cursor: pointer; 
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* MODAL                                   */
+        /* -------------------------------------------------------------------------- */
+
+        #modal {
+            display: none;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(74, 78, 105, 0.8); /* Azul oscuro semi-transparente */
+            z-index: 2000;
+            display: flex; justify-content: center; align-items: center;
+            backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: #FFFFFF;
+            padding: 50px;
+            border-radius: 40px;
+            text-align: center;
+            animation: zoomIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            border: 8px solid #FFD166;
+            max-width: 90%;
+        }
+        .modal-content h1 { font-size: 5em; margin-bottom: 10px; }
+        #modal-titulo { color: #FF6F61; font-size: 2.5em; text-shadow: 3px 3px 0 #4A4E69; }
+        #modal-puntos { 
+            margin: 25px 0; font-size: 1.5em; font-weight: 700; 
+            color: #577590; background: #EAF2F8; padding: 10px; border-radius: 10px;
+        }
+        .modal-content button { 
+            font-size: 1.4em; padding: 12px 40px; 
+            /* Se reutiliza el estilo del botón comenzar */
+        }
+
+        /* -------------------------------------------------------------------------- */
+        /* MEDIA QUERIES                               */
+        /* -------------------------------------------------------------------------- */
+        
+        @media (max-width: 850px) {
+            .contenedor-principal { flex-direction: column; }
+            #sidebar { 
+                width: 100%; flex-direction: row; overflow-x: scroll; padding: 10px; 
+                height: 90px;
+            }
+            #area-juego { padding: 15px; }
+            #panel-opciones { left: 0; right: 0; padding-bottom: 20px; }
+            .perfil { display: none; }
+            #barra-progreso-stats { padding: 15px; border-radius: 20px; }
+            .stats-cajas { gap: 15px; }
+            .stat-box { width: 100px; padding: 8px 10px; }
+            .puntos-totales-lateral { top: -10px; right: 10px; padding: 5px 10px; }
+            .puntos-totales-lateral span { font-size: 2em; }
+            #tablero { margin-bottom: 120px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pantalla-inicio">
+        <div class="inicio-contenedor">
+            <h1>🌟 SAFARI DE SONIDOS 🦁</h1>
+            <p>¡Explora hábitats y descubre animales únicos! ¿Aceptas el desafío?</p>
+            <input type="text" id="input-nombre" placeholder="Tu Nombre de Explorador" maxlength="15">
+            <button class="btn-comenzar" onclick="iniciarJuego()">¡EMPEZAR LA AVENTURA!</button>
+        </div>
+    </div>
+
+    <div id="modal">
+        <div class="modal-content">
+            <h1 style="font-size: 50px;">🎉</h1>
+            <h2 id="modal-titulo">¡Nivel Superado!</h2>
+            <p id="modal-puntos">Puntos obtenidos en el nivel: 50</p>
+            <button class="btn-comenzar" onclick="siguiente()">CONTINUAR</button>
+        </div>
+    </div>
+
+    <div class="contenedor-principal" id="juego" style="display: none;">
+        
+        <div id="sidebar">
+            <div class="perfil">
+                <h3>Explorador</h3>
+                <h2 id="nombre-jugador">---</h2>
+            </div>
+            
+            <div class="categoria-btn desbloqueada" id="cat-granja" onclick="cambiarCategoria('granja')">
+                <span>🏡 Granja</span>
+                <div class="estrellas" id="star-granja">☆☆☆</div>
+            </div>
+            <div class="categoria-btn" id="cat-mar" onclick="cambiarCategoria('mar')">
+                <span>🌊 Mar 🔒</span>
+                <div class="estrellas" id="star-mar">☆☆☆</div>
+            </div>
+            <div class="categoria-btn" id="cat-selva" onclick="cambiarCategoria('selva')">
+                <span>🦁 Selva 🔒</span>
+                <div class="estrellas" id="star-selva">☆☆☆</div>
+            </div>
+            <div class="categoria-btn" id="cat-desierto" onclick="cambiarCategoria('desierto')">
+                <span>🏜️ Desierto 🔒</span>
+                <div class="estrellas" id="star-desierto">☆☆☆</div>
+            </div>
+            <div class="categoria-btn" id="cat-artico" onclick="cambiarCategoria('artico')">
+                <span>🧊 Ártico 🔒</span>
+                <div class="estrellas" id="star-artico">☆☆☆</div>
+            </div>
+            <div class="categoria-btn" id="cat-bosque" onclick="cambiarCategoria('bosque')">
+                <span>🌳 Bosque 🔒</span>
+                <div class="estrellas" id="star-bosque">☆☆☆</div>
+            </div>
+            <div class="categoria-btn" id="cat-montana" onclick="cambiarCategoria('montana')">
+                <span>⛰️ Montaña 🔒</span>
+                <div class="estrellas" id="star-montana">☆☆☆</div>
+            </div>
+            <div class="categoria-btn" id="cat-rio" onclick="cambiarCategoria('rio')">
+                <span>🏞️ Río / Agua Dulce 🔒</span>
+                <div class="estrellas" id="star-rio">☆☆☆</div>
+            </div>
+        </div>
+
+        <div id="area-juego">
+            
+            <div class="header-nivel">
+                <div id="barra-progreso-stats">
+                    
+                    <div class="puntos-totales-lateral">
+                        ✨ TOTAL<span id="puntuacion-total-lateral">0</span>
+                    </div>
+
+                    <div class="titulo-stats">
+                        <span id="titulo-nivel-emoji">🏡</span> <span id="titulo-nivel">GRANJA - NIVEL 1</span>
+                    </div>
+
+                    <div class="stats-cajas">
+                        <div class="stat-box" id="stat-puntos">
+                            <div class="stat-label">PUNTOS NIVEL</div>
+                            <div class="stat-valor" id="puntos-nivel">0</div>
+                        </div>
+                        <div class="stat-box" id="stat-meta">
+                            <div class="stat-label">META</div>
+                            <div class="stat-valor" id="meta-nivel">0</div>
+                        </div>
+                        <div class="stat-box" id="stat-listos">
+                            <div class="stat-label">ANIMALES LISTOS</div>
+                            <div class="stat-valor" id="listos-nivel">0/0</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progreso-bar-contenedor">
+                        <div id="progreso-bar">
+                            <span id="progreso-porcentaje">0%</span>
+                        </div>
+                    </div>
+                </div>
+                <span id="instruccion">¡Arrastra la ficha correcta al animal!</span>
+            </div>
+
+            <div id="tablero"></div>
+        </div>
+
+        <div id="panel-opciones"></div>
+    </div>
+
+    <script>
+        /* BASE DE DATOS VERIFICADA Y SIN REPETICIONES */
+
+        const GITHUB_URL = 'https://raw.githubusercontent.com/leonel20202005-stack/audiosJuego/main/';
+        const NUM_ANIMALES_POR_NIVEL = 5; 
+        
+        const db = {
+            granja: [
+                { nombre: "Vaca",    sonido: "Muuu",     emoji: "🐄", archivo: "vaca.mp3" }, 
+                { nombre: "Cerdo",   sonido: "Oink",     emoji: "🐷", archivo: "cerdo.mp3" },
+                { nombre: "Gallo",   sonido: "Kikirikí", emoji: "🐓", archivo: "gallo.mp3" }, 
+                { nombre: "Oveja",   sonido: "Beeee",    emoji: "🐑", archivo: "oveja.mp3" },
+                { nombre: "Pato",    sonido: "Cuac",     emoji: "🦆", archivo: "pato.mp3" },
+                { nombre: "Caballo", sonido: "Hiiiii",   emoji: "🐴", archivo: "caballo.mp3" }, 
+                { nombre: "Pavo",    sonido: "Glu Glu",  emoji: "🦃", archivo: "pavo.mp3" },
+                { nombre: "Conejo",  sonido: "Sniff",    emoji: "🐇", archivo: "conejo.mp3" }, 
+                { nombre: "Cabra",   sonido: "Meeeh",    emoji: "🐐", archivo: "cabra.mp3" },
+                { nombre: "Ganso",   sonido: "Honk",     emoji: "🦢", archivo: "ganso.mp3" },
+                { nombre: "Burro",   sonido: "Hiaaw",    emoji: "🫏", archivo: "burro.mp3" }, 
+                { nombre: "Ratón",   sonido: "Squeak",   emoji: "🐁", archivo: "raton.mp3" },
+                { nombre: "Gallina", sonido: "Cluck",    emoji: "🐔", archivo: "gallina.mp3" }, 
+                { nombre: "Abeja",   sonido: "Bzzzz",    emoji: "🐝", archivo: "abeja.mp3" },
+                { nombre: "Hámster", sonido: "Chirp",    emoji: "🐹", archivo: "hamster.mp3" }
+            ],
+            mar: [
+                { nombre: "Ballena Azul", sonido: "Uuuuh", emoji: "🐋" }, { nombre: "Delfín", sonido: "Click", emoji: "🐬" },
+                { nombre: "Pulpo", sonido: "Blub", emoji: "🐙" }, { nombre: "Tiburón", sonido: "Chomp", emoji: "🦈" },
+                { nombre: "Tortuga Marina", sonido: "Hiss", emoji: "🐢" },
+                { nombre: "Langosta", sonido: "Snap", emoji: "🦞" }, { nombre: "Camarón", sonido: "Sshh", emoji: "🦐" },
+                { nombre: "Medusa", sonido: "Jelly", emoji: "🦑" }, { nombre: "Foca Común", sonido: "Arf Arf", emoji: "🦭" },
+                { nombre: "Morsa", sonido: "Roar", emoji: "🦭" },
+                { nombre: "Estrella de Mar", sonido: "Shine", emoji: "⭐" }, { nombre: "Hipocampo", sonido: "Glug", emoji: "🫎" },
+                { nombre: "Nutria de Mar", sonido: "Squeal", emoji: "🦦" }, { nombre: "Anguila Eléctrica", sonido: "Zap", emoji: "🐍" },
+                { nombre: "Calamar", sonido: "Ink", emoji: "🦑" }
+            ],
+            selva: [
+                { nombre: "León", sonido: "Roaar", emoji: "🦁" }, { nombre: "Mono", sonido: "Uuh-Ah", emoji: "🐵" },
+                { nombre: "Elefante", sonido: "Pauuu", emoji: "🐘" }, { nombre: "Tigre", sonido: "Grrr", emoji: "🐯" },
+                { nombre: "Loro", sonido: "Hola", emoji: "🦜" },
+                { nombre: "Cocodrilo", sonido: "Snap", emoji: "🐊" }, { nombre: "Gorila", sonido: "Ugh", emoji: "🦍" },
+                { nombre: "Jirafa", sonido: "Mmm", emoji: "🦒" }, { nombre: "Cebra", sonido: "Bray", emoji: "🦓" },
+                { nombre: "Rinoceronte", sonido: "Grunt", emoji: "🦏" },
+                { nombre: "Panda", sonido: "Chew", emoji: "🐼" }, { nombre: "Tucán", sonido: "Croak", emoji: "🦜" },
+                { nombre: "Perezoso", sonido: "Yawn", emoji: "🦥" }, { nombre: "Chimpancé", sonido: "Hoot", emoji: "🐒" },
+                { nombre: "Ocelote", sonido: "Meow", emoji: "🐆" }
+            ],
+            desierto: [
+                { nombre: "Coyote", sonido: "Aullido", emoji: "🐺" }, { nombre: "Serpiente Cascabel", sonido: "Rattle", emoji: "🐍" },
+                { nombre: "Camello", sonido: "Grunt", emoji: "🐪" }, { nombre: "Fenec", sonido: "Yelp", emoji: "🦊" },
+                { nombre: "Correcaminos", sonido: "Beep", emoji: "🐦" },
+                { nombre: "Escorpión", sonido: "Click", emoji: "🦂" }, { nombre: "Búho del Desierto", sonido: "Hoo", emoji: "🦉" },
+                { nombre: "Lagarto Monitor", sonido: "Scurry", emoji: "🦎" }, { nombre: "Hiena", sonido: "Risa", emoji: "🦛" },
+                { nombre: "Jerbo", sonido: "Chirp", emoji: "🐁" },
+                { nombre: "Adax", sonido: "Sigh", emoji: "🐏" }, { nombre: "Dromedario", sonido: "Gurgle", emoji: "🐫" },
+                { nombre: "Suricata", sonido: "Watch", emoji: "🦦" }, { nombre: "Tarántula", sonido: "Tap", emoji: "🕷️" },
+                { nombre: "Halcon Peregrino", sonido: "Screech", emoji: "🦅" }
+            ],
+            artico: [
+                { nombre: "Oso Polar", sonido: "Growl", emoji: "🐻‍❄️" }, { nombre: "Zorro Ártico", sonido: "Bark", emoji: "🦊" },
+                { nombre: "Narval", sonido: "Click", emoji: "🐳" }, { nombre: "Reno / Caribú", sonido: "Snort", emoji: "🦌" },
+                { nombre: "Beluga", sonido: "Melon", emoji: "🐋" },
+                { nombre: "Búho Nival", sonido: "Hoot", emoji: "🦉" }, { nombre: "Liebre Ártica", sonido: "Thump", emoji: "🐇" },
+                { nombre: "Lobo Ártico", sonido: "Howl", emoji: "🐺" }, { nombre: "Pingüino Emperador", sonido: "Squawk", emoji: "🐧" },
+                { nombre: "Lince Canadiense", sonido: "Meow", emoji: "🐈" },
+                { nombre: "Kodiak", sonido: "Roar", emoji: "🐻" }, { nombre: "Orca", sonido: "Whistle", emoji: "🐋" },
+                { nombre: "Alce", sonido: "Bellow", emoji: "🦌" }, { nombre: "Rata almizclera", sonido: "Splash", emoji: "🐭" },
+                { nombre: "Marmota Alpina", sonido: "Whistle", emoji: "🐿️" }
+            ],
+            bosque: [
+                { nombre: "Oso Pardo", sonido: "Roar", emoji: "🐻" }, { nombre: "Búho Real", sonido: "Hoot", emoji: "🦉" },
+                { nombre: "Venado cola blanca", sonido: "Snort", emoji: "🦌" }, { nombre: "Mapache", sonido: "Chirr", emoji: "🦝" },
+                { nombre: "Lobo Gris", sonido: "Howl", emoji: "🐺" },
+                { nombre: "Ardilla", sonido: "Chirp", emoji: "🐿️" }, { nombre: "Tejón", sonido: "Hiss", emoji: "🦡" },
+                { nombre: "Zorro Rojo", sonido: "Yelp", emoji: "🦊" }, { nombre: "Jabalí", sonido: "Oink", emoji: "🐗" },
+                { nombre: "Mofeta", sonido: "Stink", emoji: "🦨" },
+                { nombre: "Puercoespín", sonido: "Quill", emoji: "🦔" }, { nombre: "Castor Canadiense", sonido: "Slap", emoji: "🦫" },
+                { nombre: "Pájaro Carpintero", sonido: "Tap Tap", emoji: "🐦" }, { nombre: "Comadreja", sonido: "Hiss", emoji: "🪱" },
+                { nombre: "Gato Montés", sonido: "Meow", emoji: "🐈" }
+            ],
+            montana: [
+                { nombre: "Cabra Montés", sonido: "Bleat", emoji: "🐐" }, { nombre: "Cóndor Andino", sonido: "Hiss", emoji: "🦅" },
+                { nombre: "Leopardo de las Nieves", sonido: "Chuff", emoji: "🐆" }, { nombre: "Puma", sonido: "Scream", emoji: "🐈" },
+                { nombre: "Águila Real", sonido: "Screech", emoji: "🦅" },
+                { nombre: "Borrego Cimarrón", sonido: "Baaa", emoji: "🐑" }, { nombre: "Oso Grizzly", sonido: "Grunt", emoji: "🐻" },
+                { nombre: "Lama", sonido: "Spit", emoji: "🦙" }, { nombre: "Muflón", sonido: "Bleat", emoji: "🐑" },
+                { nombre: "Yak", sonido: "Moo", emoji: "🐃" },
+                { nombre: "Bisonte", sonido: "Snort", emoji: "🦬" }, { nombre: "Armadillo", sonido: "Click", emoji: "🦔" },
+                { nombre: "Chinchilla", sonido: "Squeak", emoji: "🐹" }, { nombre: "Vicúña", sonido: "Snort", emoji: "🦙" },
+                { nombre: "Guepardo", sonido: "Chirp", emoji: "🐆" }
+            ],
+            rio: [
+                { nombre: "Nutria de Río", sonido: "Squeal", emoji: "🦦" }, { nombre: "Castor", sonido: "Slap", emoji: "🦫" },
+                { nombre: "Pez Gato", sonido: "Meow", emoji: "🐟" }, { nombre: "Caimán", sonido: "Bellow", emoji: "🐊" },
+                { nombre: "Libélula", sonido: "Buzz", emoji: "🦟" },
+                { nombre: "Rana Arborícola", sonido: "Croak", emoji: "🐸" }, { nombre: "Tortuga de agua dulce", sonido: "Hiss", emoji: "🐢" },
+                { nombre: "Garza", sonido: "Squawk", emoji: "🦆" }, { nombre: "Sapo Común", sonido: "Ribbit", emoji: "🐸" },
+                { nombre: "Piraña", sonido: "Bite", emoji: "🐟" },
+                { nombre: "Pelícano", sonido: "Gulp", emoji: "鹈" }, { nombre: "Lombriz", sonido: "Wiggle", emoji: "🐛" },
+                { nombre: "Cangrejo de río", sonido: "Click", emoji: "🦀" }, { nombre: "Hipopótamo", sonido: "Grunt", emoji: "🦛" },
+                { nombre: "Tritón", sonido: "Splash", emoji: "🦎" }
+            ]
+        };
+
+        // Emojis para los títulos
+        const catEmojis = { 
+            granja: '🏡', mar: '🌊', selva: '🦁', 
+            desierto: '🏜️', artico: '🧊', bosque: '🌳', montana: '⛰️', rio: '🏞️' 
+        };
+
+        const ALL_CATEGORIES = Object.keys(db);
+
+        let estado = {
+            cat: 'granja',
+            nivel: 1,
+            puntos: 0, 
+            progreso: ALL_CATEGORIES.reduce((acc, c) => ({ ...acc, [c]: 0 }), {}),
+            animalesCompletados: 0, 
+            totalAnimalesNivel: NUM_ANIMALES_POR_NIVEL,
+            metaPuntosNivel: NUM_ANIMALES_POR_NIVEL * 2 * 10 
+        };
+
+
+        // --- FUNCIONES PRINCIPALES ---
+
+        function iniciarJuego() {
+            const nombre = document.getElementById('input-nombre').value.trim();
+            if(!nombre) return alert("¡Escribe tu nombre!");
+            document.getElementById('nombre-jugador').innerText = nombre.toUpperCase();
+            document.getElementById('modal').style.display = 'none';
+            document.getElementById('pantalla-inicio').style.display = 'none';
+            document.getElementById('juego').style.display = 'flex';
+            
+            // --- AGREGA ESTAS LÍNEAS DE REINICIO ---
+            estado.cat = 'granja'; // Asegura que empieza en Granja
+            estado.nivel = 1;      // Fuerza el nivel 1
+            estado.puntos = 0;     // Resetea los puntos
+            estado.animalesCompletados = 0;
+            // ----------------------------------------
+
+            cargarNivel();
+        }
+
+        function cambiarCategoria(nuevaCat) {
+            const btn = document.getElementById(`cat-${nuevaCat}`);
+            if(btn.classList.contains('desbloqueada') && estado.cat !== nuevaCat) {
+                estado.cat = nuevaCat;
+                estado.nivel = estado.progreso[nuevaCat] < 3 ? estado.progreso[nuevaCat] + 1 : 3;
+                cargarNivel();
+            }
+        }
+
+        function cargarNivel() {
+            // --- PARCHE DE SEGURIDAD ---
+            // Si estamos en Granja y acabamos de empezar (puntos 0), forzamos nivel 1
+
+            if (estado.cat === 'granja' && estado.puntos === 0 && estado.nivel !== 1) {
+                console.log("Corrigiendo nivel incorrecto...");
+                estado.nivel = 1;
+            }
+            
+            const tablero = document.getElementById('tablero');
+            const panel = document.getElementById('panel-opciones');
+            tablero.innerHTML = '';
+            panel.innerHTML = '';
+            
+            const inicio = (estado.nivel - 1) * NUM_ANIMALES_POR_NIVEL;
+            const animalesNivel = db[estado.cat].slice(inicio, inicio + NUM_ANIMALES_POR_NIVEL);
+            
+            estado.totalAnimalesNivel = animalesNivel.length;
+            estado.animalesCompletados = 0; 
+            estado.metaPuntosNivel = estado.totalAnimalesNivel * 2 * 10; 
+
+            document.getElementById('titulo-nivel').innerText = `${estado.cat.toUpperCase()} - NIVEL ${estado.nivel}`;
+            document.getElementById('titulo-nivel-emoji').innerText = catEmojis[estado.cat];
+
+
+            // GENERAR TARJETAS 
+            animalesNivel.forEach((animal, i) => {
+                const card = document.createElement('div');
+                card.className = 'tarjeta';
+                card.id = `card-${i}`;
+                
+                const huecos = crearHueco(animal.nombre, 'texto') + crearHueco(animal.sonido, 'sonido');
+
+                card.innerHTML = `
+                    <div class="emoji-grande" onclick="hablar('${animal.sonido}')">${animal.emoji}</div>
+                    ${huecos}
+                `;
+                tablero.appendChild(card);
+            });
+
+            // GENERAR FICHAS (Opciones)
+            let opciones = [];
+            animalesNivel.forEach(animal => {
+                opciones.push({ val: animal.nombre, tipo: 'texto' });
+                opciones.push({ val: animal.sonido, tipo: 'sonido' });
+            });
+
+            opciones.sort(() => Math.random() - 0.5);
+
+            opciones.forEach(op => {
+                const ficha = document.createElement('div');
+                ficha.className = 'ficha';
+                ficha.draggable = true;
+                ficha.id = 'ficha-' + Math.random().toString(36).substr(2,9);
+                
+                if(op.tipo === 'sonido') {
+                    ficha.innerHTML = `<div class="btn-play-mini" onclick="hablar('${op.val}')">🔊</div> ${op.val.toUpperCase()}`;
+                } else {
+                    ficha.innerHTML = op.val.toUpperCase();
+                }
+
+                ficha.addEventListener('dragstart', e => {
+                    e.dataTransfer.setData('text', op.val);
+                    e.dataTransfer.setData('id', ficha.id);
+                });
+                panel.appendChild(ficha);
+            });
+            
+            actualizarStats(0, estado.animalesCompletados);
+            actualizarSidebar();
+        }
+
+        function crearHueco(target, tipo) {
+            const etiqueta = tipo === 'texto' ? 'NOMBRE' : 'SONIDO';
+            return `<div class="zona-drop" data-target="${target}">${etiqueta}</div>`;
+        }
+        
+        // --- DRAG & DROP HANDLERS ---
+        document.addEventListener('dragover', e => {
+            if(e.target.classList.contains('zona-drop')) {
+                e.preventDefault();
+                e.target.classList.add('hover');
+            }
+        });
+
+        document.addEventListener('dragleave', e => {
+            if(e.target.classList.contains('zona-drop')) e.target.classList.remove('hover');
+        });
+
+        document.addEventListener('drop', e => {
+            if(e.target.classList.contains('zona-drop')) {
+                e.preventDefault();
+                const zone = e.target;
+                zone.classList.remove('hover');
+                
+                const val = e.dataTransfer.getData('text');
+                const id = e.dataTransfer.getData('id');
+                const target = zone.getAttribute('data-target');
+
+                if(val === target) {
+                    // ACIERTO
+                    zone.style.background = '#4A4E69';
+                    zone.style.color = '#A1FFCE';
+                    zone.classList.add('acierto');
+                    zone.innerHTML = `✅ ${val.toUpperCase()}`;
+                    
+                    estado.puntos += 10;
+                    
+                    const puntosNivelActual = parseInt(document.getElementById('puntos-nivel').innerText) + 10;
+                    
+                    // Eliminar ficha usada
+                    const ficha = document.getElementById(id);
+                    if(ficha) {
+                        ficha.classList.add('usada');
+                        setTimeout(() => ficha.remove(), 400);
+                    }
+
+                    // Verificar si la tarjeta está completa
+                    const parent = zone.parentElement;
+                    const zonas = parent.querySelectorAll('.zona-drop');
+                    let completa = true;
+                    zonas.forEach(z => { 
+                        if(!z.innerHTML.includes('✅')) completa = false; 
+                    });
+
+                    if(completa) {
+                        estado.animalesCompletados++; 
+                    }
+                    
+                    actualizarStats(puntosNivelActual, estado.animalesCompletados);
+
+                    if(completa) {
+                         setTimeout(() => {
+                            parent.classList.add('completada');
+                            // Llamada a la victoria o siguiente nivel
+                            setTimeout(() => {
+                                parent.style.visibility = 'hidden';
+                                if(estado.animalesCompletados === estado.totalAnimalesNivel) victoria(puntosNivelActual);
+                            }, 700);
+                        }, 500);
+                    }
+
+                } else {
+                    // ERROR (Feedback visual)
+                    zone.classList.add('error');
+                    setTimeout(() => {
+                        zone.classList.remove('error');
+                    }, 500);
+                }
+            }
+        });
+        
+        // --- UTILIDADES Y FLUJO ---
+
+        function actualizarStats(puntosNivel, animalesListos) {
+            const totalFichasNivel = estado.totalAnimalesNivel * 2;
+            const fichasCompletadas = puntosNivel / 10;
+            const porcentaje = totalFichasNivel > 0 ? Math.round((fichasCompletadas / totalFichasNivel) * 100) : 0;
+            
+            document.getElementById('puntuacion-total-lateral').innerText = estado.puntos; 
+            document.getElementById('puntos-nivel').innerText = puntosNivel;
+            document.getElementById('meta-nivel').innerText = estado.metaPuntosNivel;
+            document.getElementById('listos-nivel').innerText = `${animalesListos}/${estado.totalAnimalesNivel}`;
+            
+            document.getElementById('progreso-bar').style.width = `${porcentaje}%`;
+            document.getElementById('progreso-porcentaje').innerText = `${porcentaje}%`;
+        }
+        
+ // --- VARIABLES GLOBALES DE AUDIO ---
+    // Estas variables nos ayudan a controlar qué está sonando
+    let audioActual = null; // Guardará el archivo MP3 que está sonando
+    let timerAudio = null;  // Guardará el contador de tiempo de 5 segundos
+
+    // --- FUNCIÓN PARA DETENER TODO ---
+    function detenerSonidoAnterior() {
+        // 1. Si hay un MP3 sonando, lo pausamos y reiniciamos
+        if (audioActual) {
+            audioActual.pause();
+            audioActual.currentTime = 0;
+            audioActual = null;
+        }
+
+        // 2. Si hay una voz de robot hablando, la callamos
+        window.speechSynthesis.cancel();
+
+        // 3. Si había una cuenta atrás de 5 segundos pendiente, la cancelamos
+        if (timerAudio) {
+            clearTimeout(timerAudio);
+            timerAudio = null;
+        }
+    }
+
+    // --- NUEVA FUNCIÓN HABLAR ---
+    function hablar(texto) {
+        // PASO 1: Callar cualquier sonido previo (Regla: "suene hasta que se active otro")
+        detenerSonidoAnterior();
+
+        // PASO 2: Buscar el animal en la base de datos
+        let animalEncontrado = null;
+        if(db[estado.cat]) {
+            animalEncontrado = db[estado.cat].find(a => a.sonido === texto);
+        }
+
+        // PASO 3: Reproducir
+        if (animalEncontrado && animalEncontrado.archivo) {
+            // --- CASO: AUDIO REAL (GitHub) ---
+            const audioUrl = GITHUB_URL + animalEncontrado.archivo;
+            audioActual = new Audio(audioUrl);
+            
+            audioActual.play().catch(error => {
+                console.log("Error o archivo no encontrado:", error);
+                usarVozRobot(texto);
+            });
+
+            // Regla: "Limitar el sonido a 5 segundos"
+            timerAudio = setTimeout(() => {
+                // A los 5 segundos, detenemos suavemente el audio si sigue sonando
+                if (audioActual) {
+                    audioActual.pause();
+                    audioActual = null;
+                }
+            }, 5000); // 5000 milisegundos = 5 segundos
+
+        } else {
+            // --- CASO: VOZ ROBOT (Categorías sin audio real) ---
+            usarVozRobot(texto);
+        }
+    }
+
+    function usarVozRobot(texto) {
+        const u = new SpeechSynthesisUtterance(texto);
+        u.lang = 'es-ES';
+        window.speechSynthesis.speak(u);
+    }
+
+    function usarVozRobot(texto) {
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(texto);
+        u.lang = 'es-ES';
+        window.speechSynthesis.speak(u);
+    }
+
+        function actualizarSidebar() {
+            ALL_CATEGORIES.forEach((c, i) => {
+                const btn = document.getElementById(`cat-${c}`);
+                const stars = document.getElementById(`star-${c}`);
+                
+                btn.classList.remove('activa');
+                if(estado.cat === c) btn.classList.add('activa');
+
+                // Estrellas
+                let s = '';
+                for(let k=0; k<3; k++) {
+                    s += k < estado.progreso[c] ? '<span class="estrella ganada">★</span>' : '<span class="estrella">☆</span>';
+                }
+                stars.innerHTML = s;
+
+                // Lógica de Desbloqueo: Desbloquea si la anterior está completa (3 estrellas)
+                if(i > 0) {
+                    const prev = ALL_CATEGORIES[i-1];
+                    if(estado.progreso[prev] >= 3) {
+                        btn.classList.add('desbloqueada');
+                        btn.querySelector('span').innerText = btn.querySelector('span').innerText.replace(' 🔒','');
+                    } else if (!btn.classList.contains('desbloqueada')) {
+                        if(!btn.querySelector('span').innerText.includes('🔒')) {
+                            btn.querySelector('span').innerText += ' 🔒';
+                        }
+                    }
+                }
+            });
+        }
+
+        function victoria(puntosNivel) {
+            const modal = document.getElementById('modal');
+            if(estado.nivel > estado.progreso[estado.cat]) estado.progreso[estado.cat] = estado.nivel;
+            
+            document.getElementById('modal-titulo').innerText = estado.nivel === 3 ? "¡CATEGORÍA COMPLETA! 🏆" : "¡NIVEL SUPERADO! ✨";
+            document.getElementById('modal-puntos').innerText = `¡Sumaste ${puntosNivel} PUNTOS!`;
+            modal.style.display = 'flex';
+        }
+
+        function siguiente() {
+            document.getElementById('modal').style.display = 'none';
+            
+            if(estado.nivel < 3) {
+                estado.nivel++;
+                cargarNivel();
+            } else {
+                const idx = ALL_CATEGORIES.indexOf(estado.cat);
+                if(idx < ALL_CATEGORIES.length - 1) {
+                    estado.cat = ALL_CATEGORIES[idx+1];
+                    estado.nivel = 1;
+                    cargarNivel();
+                } else {
+                    alert("¡JUEGO COMPLETADO! ERES UN EXPERTO ANIMAL 🥇");
+                    location.reload();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
